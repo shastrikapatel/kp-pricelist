@@ -152,7 +152,7 @@
         cursor: pointer;
     }
 
-    /* Mobile Responsive Table -> Card */
+    /* Mobile Responsive Table -> Horizontal Line */
     @media (max-width: 768px) {
         table, thead, tbody, th, td, tr {
             display: block;
@@ -162,27 +162,26 @@
             display: none;
         }
         tr {
-            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
             background: #f9f9f9;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 8px;
         }
         td {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px;
             border: none;
-            border-bottom: 1px solid #eee;
+            padding: 5px;
             font-size: 14px;
         }
-        td:last-child {
-            border-bottom: none;
+        td.total-price {
+            display: none; /* Hide Total column in mobile */
         }
-        td::before {
-            content: attr(data-label);
-            font-weight: bold;
-            color: #333;
+        td button {
+            padding: 5px 10px;
+            margin: 0 5px;
         }
     }
 </style>
@@ -209,7 +208,7 @@
             <% items.forEach(item => { %>
             <tr>
                 <td data-label="Item Name"><%= item.name %></td>
-                <td class="price" data-price="<%= item.price %>" data-label="Price (₹)"><%= item.price %></td>
+                <td class="price" data-price="<%= item.price %>" data-label="Price (₹)">₹<%= item.price %></td>
                 <td data-label="Quantity">
                     <button onclick="decreaseQty(this)">-</button>
                     <span class="qty">0</span>
@@ -310,7 +309,7 @@ function prepareWhatsApp() {
         if (qty > 0) {
             let itemName = row.cells[0].textContent;
             let price = row.cells[1].textContent;
-            selectedItems.push(`${itemName} - ${qty} x ₹${price}`);
+            selectedItems.push(`${itemName} - ${qty} x ${price}`);
         }
     });
 
@@ -336,7 +335,7 @@ function sendWhatsApp() {
         let qty = parseInt(row.querySelector('.qty').textContent);
         if (qty > 0) {
             let itemName = row.cells[0].textContent;
-            let price = row.cells[1].textContent;
+            let price = row.querySelector('.price').textContent.replace('₹', '');
             message += `${itemName} - ${qty} x ₹${price} = ₹${qty * price}%0A`;
         }
     });
