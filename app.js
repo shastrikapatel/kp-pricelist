@@ -1,7 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const cookieSession = require("cookie-session");
 const path = require("path");
 
 const app = express();
@@ -9,17 +8,11 @@ const app = express();
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
-app.set("views", path.join(process.cwd(), "views")); // Vercel safe
+app.set("views", path.join(__dirname, "views"));
 
-// ✅ Cookie-based session (serverless friendly)
-app.use(cookieSession({
-    name: "session",
-    keys: ["your_secret_key"], // Change this to something secure
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
-}));
-
-// MongoDB connection
+// MongoDB Connection Pooling
 let isConnected = false;
+
 async function connectDB() {
     if (isConnected) return;
     await mongoose.connect(process.env.MONGO_URL, {
@@ -33,6 +26,7 @@ async function connectDB() {
 const adminRoutes = require("./routes/admin");
 const customerRoutes = require("./routes/customer");
 
+// Apply DB connection for every request (but only first time connects)
 app.use(async (req, res, next) => {
     await connectDB();
     next();
@@ -41,12 +35,7 @@ app.use(async (req, res, next) => {
 app.use("/admin", adminRoutes);
 app.use("/", customerRoutes);
 
-// Error handler
-app.use((err, req, res, next) => {
-    console.error("Error:", err);
-    res.status(500).send("Internal Server Error");
-});
-
+// Local testing
 if (process.env.NODE_ENV !== "production") {
     const PORT = 3000;
     app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
