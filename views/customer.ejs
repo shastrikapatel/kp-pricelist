@@ -50,36 +50,33 @@
         margin-bottom: 15px;
     }
     .button-group {
-    display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center;     /* Align vertically if needed */
-    gap: 15px;              /* Space between buttons */
-    flex-wrap: wrap;        /* Wrap for mobile view */
-    margin-top: 20px;       /* Add some spacing from top */
-    text-align: center;
-}
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-top: 20px;
+        text-align: center;
+    }
     .button-group button {
-    padding: 10px 15px;
-    font-size: 16px;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    background-color: #28a745; /* Green for pharmacy theme */
-    color: #fff;
-    transition: background 0.3s;
-}
-
-.button-group button:hover {
-    background-color: #218838; /* Darker green on hover */
-}
-
-.button-group button:nth-child(2) {
-    background-color: #6c757d; /* Gray for reset */
-}
-
-.button-group button:nth-child(2):hover {
-    background-color: #5a6268;
-}
+        padding: 10px 15px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+        background-color: #28a745;
+        color: #fff;
+        transition: background 0.3s;
+    }
+    .button-group button:hover {
+        background-color: #218838;
+    }
+    .button-group button:nth-child(2) {
+        background-color: #6c757d;
+    }
+    .button-group button:nth-child(2):hover {
+        background-color: #5a6268;
+    }
 
     /* Popup Styles */
     .popup-overlay {
@@ -110,7 +107,7 @@
         overflow-y: auto;
     }
     .popup ul li {
-        font-size: 20px;
+        font-size: 18px;
         margin: 5px 0;
     }
     .popup .popup-buttons {
@@ -133,6 +130,28 @@
         color: #fff;
     }
 
+    /* Message Popup */
+    .message-box {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 300px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    .message-box p {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+    .message-box button {
+        padding: 8px 15px;
+        background: #28a745;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
     /* Mobile Responsive Table -> Card */
     @media (max-width: 768px) {
         table, thead, tbody, th, td, tr {
@@ -140,7 +159,7 @@
             width: 100%;
         }
         thead {
-            display: none; /* Hide table header */
+            display: none;
         }
         tr {
             margin-bottom: 15px;
@@ -212,9 +231,9 @@
     <button onclick="resetCart()">Reset</button>
 </div>
 
-<!-- Popup -->
+<!-- Popup for Order -->
 <div class="popup-overlay" id="popupOverlay">
-    <div class="popup">
+    <div class="popup" id="popupBox">
         <h3>Confirm Your Order</h3>
         <ul id="selectedItemsList"></ul>
         <p><strong>Grand Total: ₹<span id="popupGrandTotal">0</span></strong></p>
@@ -222,6 +241,14 @@
             <button class="send-btn" onclick="sendWhatsApp()">Send</button>
             <button class="cancel-btn" onclick="closePopup()">Cancel</button>
         </div>
+    </div>
+</div>
+
+<!-- Popup for Messages -->
+<div class="popup-overlay" id="messageOverlay" style="display:none;">
+    <div class="message-box">
+        <p id="messageText"></p>
+        <button onclick="closeMessage()">OK</button>
     </div>
 </div>
 
@@ -259,10 +286,23 @@ function resetCart() {
     updateTotal();
 }
 
+// Show custom message popup
+function showMessage(msg) {
+    document.getElementById('messageText').textContent = msg;
+    document.getElementById('messageOverlay').style.display = 'flex';
+}
+
+function closeMessage() {
+    document.getElementById('messageOverlay').style.display = 'none';
+}
+
 // Prepare popup with selected items
 function prepareWhatsApp() {
     let name = document.getElementById('customerName').value.trim();
-    if (!name) { alert('Please enter your number.'); return; }
+    if (!name) { 
+        showMessage('Please enter your number.'); 
+        return; 
+    }
 
     let selectedItems = [];
     document.querySelectorAll('#itemList tr').forEach(row => {
@@ -275,7 +315,7 @@ function prepareWhatsApp() {
     });
 
     if (selectedItems.length === 0) {
-        alert('Please select at least one item.');
+        showMessage('Please select at least one item.');
         return;
     }
 
