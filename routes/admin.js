@@ -22,12 +22,13 @@ router.get("/login", (req, res) => {
 router.post("/login", (req, res) => {
     const { username, password } = req.body;
     if (username === ADMIN_USER && password === ADMIN_PASS) {
-        req.session.isAdmin = true; // Store login in session
-        return res.redirect("/admin"); // Redirect to admin dashboard
+        req.session.isAdmin = true;  // ✅ This works now
+        return res.redirect("/admin");
     } else {
         return res.render("admin-login", { error: "Invalid username or password" });
     }
 });
+
 
 // ✅ Logout route
 router.get("/logout", (req, res) => {

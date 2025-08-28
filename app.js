@@ -11,14 +11,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.set("views", path.join(process.cwd(), "views")); // Vercel safe
 
-// Cookie-based session (Vercel compatible)
+// ✅ Cookie-based session (serverless friendly)
 app.use(cookieSession({
     name: "session",
-    keys: ["secret_key_here"], // Change to strong key
+    keys: ["your_secret_key"], // Change this to something secure
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
 
-// MongoDB Connection
+// MongoDB connection
 let isConnected = false;
 async function connectDB() {
     if (isConnected) return;
@@ -33,7 +33,6 @@ async function connectDB() {
 const adminRoutes = require("./routes/admin");
 const customerRoutes = require("./routes/customer");
 
-// Connect DB for every request
 app.use(async (req, res, next) => {
     await connectDB();
     next();
