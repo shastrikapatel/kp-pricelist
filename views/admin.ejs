@@ -195,19 +195,19 @@
                 <th>Action</th>
             </tr>
             <% items.forEach(item=> { %>
-                <tr>
-                    <form action="/admin/update/<%= item._id %>" method="POST">
-                        <td><input type="text" name="name" value="<%= item.name %>"></td>
-                        <td><input type="number" name="price" value="<%= item.price %>"></td>
-                        <td>
-                            <button type="submit">Update</button>
-                    </form>
-                    <form action="/admin/delete/<%= item._id %>" method="POST" style="display:inline;">
-                        <button type="submit">Delete</button>
-                    </form>
-                    </td>
-                </tr>
-                <% }) %>
+            <tr>
+                <form action="/admin/update/<%= item._id %>" method="POST">
+                    <td><input type="text" name="name" value="<%= item.name %>"></td>
+                    <td><input type="number" name="price" value="<%= item.price %>"></td>
+                    <td>
+                        <button type="submit">Update</button>
+                </form>
+                <form action="/admin/delete/<%= item._id %>" method="POST" style="display:inline;">
+                    <button type="submit">Delete</button>
+                </form>
+                </td>
+            </tr>
+            <% }) %>
         </table>
     </div>
 
@@ -215,9 +215,9 @@
         const ADMIN_USER = "admin";
         const ADMIN_PASS = "12345";
 
-        // Check login state on page load
+        // Check login state on page load using sessionStorage
         window.onload = function () {
-            if (localStorage.getItem("isLoggedIn") === "true") {
+            if (sessionStorage.getItem("isLoggedIn") === "true") {
                 showAdminPanel();
             }
         };
@@ -227,7 +227,7 @@
             const password = document.getElementById("password").value.trim();
 
             if (username === ADMIN_USER && password === ADMIN_PASS) {
-                localStorage.setItem("isLoggedIn", "true");
+                sessionStorage.setItem("isLoggedIn", "true"); // session storage
                 showAdminPanel();
             } else {
                 document.getElementById("error").innerText = "Invalid username or password!";
@@ -235,7 +235,7 @@
         }
 
         function logout() {
-            localStorage.removeItem("isLoggedIn");
+            sessionStorage.removeItem("isLoggedIn");
             document.getElementById("loginForm").style.display = "block";
             document.getElementById("adminPanel").style.display = "none";
             document.getElementById("username").value = "";
