@@ -25,6 +25,9 @@ async function connectDB() {
 // Routes
 const adminRoutes = require("./routes/admin");
 const customerRoutes = require("./routes/customer");
+const adminRoutes = require("./routes/admin"); // make sure path is correct
+
+
 
 // Apply DB connection for every request (but only first time connects)
 app.use(async (req, res, next) => {
@@ -34,7 +37,7 @@ app.use(async (req, res, next) => {
 
 app.use("/admin", adminRoutes);
 app.use("/", customerRoutes);
-
+app.use("/admin", adminRoutes);
 // Local testing
 if (process.env.NODE_ENV !== "production") {
     const PORT = 3000;

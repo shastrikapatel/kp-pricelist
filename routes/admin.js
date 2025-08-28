@@ -1,24 +1,31 @@
 const express = require("express");
 const router = express.Router();
-const Item = require("../models/Item");
+
+// Temporary admin credentials (for demo purposes)
+const ADMIN_USERNAME = "admin";
+const ADMIN_PASSWORD = "password";
+
+// Render login page
+router.get("/login", (req, res) => {
+    res.render("admin-login", { error: null });
+});
+
+// Handle login form submission
+router.post("/login", (req, res) => {
+    const { username, password } = req.body;
+
+    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+        // Successful login
+        res.redirect("/admin/dashboard");
+    } else {
+        // Login failed
+        res.render("admin-login", { error: "Invalid username or password" });
+    }
+});
 
 // Admin dashboard
-router.get("/", async (req, res) => {
-    const items = await Item.find();
-    res.render("admin", { items });
-});
-
-// Add new item
-router.post("/add", async (req, res) => {
-    const { name, price } = req.body;
-    await Item.create({ name, price });
-    res.redirect("/admin");
-});
-
-// Delete item
-router.post("/delete/:id", async (req, res) => {
-    await Item.findByIdAndDelete(req.params.id);
-    res.redirect("/admin");
+router.get("/dashboard", (req, res) => {
+    res.send("<h1>Welcome Admin!</h1><p>This is the dashboard.</p>");
 });
 
 module.exports = router;
