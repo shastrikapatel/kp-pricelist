@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+</head>
+<body>
+    <h1>Manage Items</h1>
+    <form action="/admin/add" method="POST">
+        <input type="text" name="name" placeholder="Item Name" required>
+        <input type="number" name="price" placeholder="Price" required>
+        <button type="submit">Add Item</button>
+    </form>
+
+    <h2>Items List</h2>
+    <ul>
+        <% items.forEach(item => { %>
+            <li><%= item.name %> - ₹<%= item.price %>
+                <form action="/admin/delete/<%= item._id %>" method="POST" style="display:inline;">
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+        <% }) %>
+    </ul>
+</body>
+</html>

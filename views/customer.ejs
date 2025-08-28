@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customer View</title>
+</head>
+<body>
+    <h1>Available Items</h1>
+    <ul>
+        <% items.forEach(item => { %>
+            <li><%= item.name %> - ₹<%= item.price %></li>
+        <% }) %>
+    </ul>
+</body>
+</html>
