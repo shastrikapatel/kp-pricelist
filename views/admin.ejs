@@ -158,7 +158,7 @@
     <form action="/admin/add" method="POST">
         <input type="text" name="name" placeholder="Item Name" required>
         <input type="number" name="price" placeholder="Price" required>
-        <input type="number" name="quantity" placeholder="Quantity" required>
+        <!-- <input type="number" name="quantity" placeholder="Quantity" required> -->
         <button type="submit">Add Item</button>
     </form>
 
@@ -170,7 +170,7 @@
                 <form action="/admin/update/<%= item._id %>" method="POST">
                     <td><input type="text" name="name" value="<%= item.name %>"></td>
                     <td><input type="number" name="price" value="<%= item.price %>"></td>
-                    <td><input type="number" name="quantity" value="<%= item.quantity %>"></td>
+                    <!-- <td><input type="number" name="quantity" value="<%= item.quantity %>"></td> -->
                     <td>
                         <button type="submit">Update</button>
                 </form>
