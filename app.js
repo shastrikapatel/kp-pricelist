@@ -2,17 +2,11 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const path = require("path");
-const session = require("express-session");
 
 const app = express();
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(session({
-    secret: "your_secret_key", // Change this to a strong secret
-    resave: false,
-    saveUninitialized: true
-}));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
