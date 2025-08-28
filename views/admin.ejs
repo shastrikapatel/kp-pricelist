@@ -60,24 +60,37 @@
         const ADMIN_USER = "admin";
         const ADMIN_PASS = "12345";
 
+        // On page load, check if user is already logged in
+        window.onload = function() {
+            if (localStorage.getItem("isLoggedIn") === "true") {
+                showAdminPanel();
+            }
+        };
+
         function login() {
             const username = document.getElementById("username").value;
             const password = document.getElementById("password").value;
 
             if (username === ADMIN_USER && password === ADMIN_PASS) {
-                document.getElementById("loginForm").style.display = "none";
-                document.getElementById("adminPanel").style.display = "block";
+                localStorage.setItem("isLoggedIn", "true");
+                showAdminPanel();
             } else {
                 document.getElementById("error").innerText = "Invalid username or password!";
             }
         }
 
         function logout() {
+            localStorage.removeItem("isLoggedIn");
             document.getElementById("loginForm").style.display = "block";
             document.getElementById("adminPanel").style.display = "none";
             document.getElementById("username").value = "";
             document.getElementById("password").value = "";
             document.getElementById("error").innerText = "";
+        }
+
+        function showAdminPanel() {
+            document.getElementById("loginForm").style.display = "none";
+            document.getElementById("adminPanel").style.display = "block";
         }
     </script>
 </body>
