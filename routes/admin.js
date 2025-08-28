@@ -10,9 +10,23 @@ router.get("/", async (req, res) => {
 
 // Add new item
 router.post("/add", async (req, res) => {
-    const { name, price } = req.body;
-    await Item.create({ name, price });
+    const { name, price, quantity } = req.body;
+    await Item.create({ name, price, quantity });
     res.redirect("/admin");
+});
+
+// Update item
+router.post("/update/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, price, quantity } = req.body;
+
+        await Item.findByIdAndUpdate(id, { name, price, quantity });
+        res.redirect("/admin");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error updating item");
+    }
 });
 
 // Delete item
