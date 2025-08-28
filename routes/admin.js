@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-// Temporary admin credentials (for demo purposes)
+// Temporary admin credentials
 const ADMIN_USERNAME = "admin";
 const ADMIN_PASSWORD = "password";
 
@@ -15,17 +15,12 @@ router.post("/login", (req, res) => {
     const { username, password } = req.body;
 
     if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-        // Successful login
-        res.redirect("/admin/dashboard");
+        // Successful login -> redirect to admin.ejs
+        res.render("admin", { username }); // pass data if needed
     } else {
-        // Login failed
+        // Login failed -> show login page again with error
         res.render("admin-login", { error: "Invalid username or password" });
     }
-});
-
-// Admin dashboard
-router.get("/dashboard", (req, res) => {
-    res.send("<h1>Welcome Admin!</h1><p>This is the dashboard.</p>");
 });
 
 module.exports = router;
