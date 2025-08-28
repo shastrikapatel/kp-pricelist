@@ -3,7 +3,7 @@ const router = express.Router();
 const Item = require("../models/Item");
 
 // Hardcoded Admin Credentials
-const ADMIN_USER = "admin";
+const ADMIN_USER = "admin@example.com";
 const ADMIN_PASS = "12345";
 
 // Middleware: Check if Admin is Authenticated
