@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-// Hardcoded credentials
+// ✅ Hardcoded credentials
 const ADMIN_USER = "admin";
 const ADMIN_PASS = "12345";
 
-// Middleware to check login
+// ✅ Middleware to check if user is logged in
 function isAuthenticated(req, res, next) {
     if (req.session && req.session.isAdmin) {
         return next();
@@ -13,36 +13,36 @@ function isAuthenticated(req, res, next) {
     return res.redirect("/admin/login");
 }
 
-// Login page
+// ✅ Login page
 router.get("/login", (req, res) => {
     res.render("admin-login", { error: null });
 });
 
-// Handle login
+// ✅ Handle login form submission
 router.post("/login", (req, res) => {
     const { username, password } = req.body;
     if (username === ADMIN_USER && password === ADMIN_PASS) {
-        req.session.isAdmin = true;
-        return res.redirect("/admin");
+        req.session.isAdmin = true; // Store login in session
+        return res.redirect("/admin"); // Redirect to admin dashboard
     } else {
         return res.render("admin-login", { error: "Invalid username or password" });
     }
 });
 
-// Logout
+// ✅ Logout route
 router.get("/logout", (req, res) => {
     req.session = null; // Clear session
     res.redirect("/admin/login");
 });
 
-// Admin dashboard (Protected)
+// ✅ Admin dashboard (Protected)
 router.get("/", isAuthenticated, async (req, res) => {
-    const Item = require("../models/Item");
-    const items = await Item.find();
-    res.render("admin", { items });
+    const Item = require("../models/Item"); // Import Item model
+    const items = await Item.find(); // Fetch items from DB
+    res.render("admin", { items }); // Render admin.ejs with items
 });
 
-// Add Item
+// ✅ Add Item (Protected)
 router.post("/add", isAuthenticated, async (req, res) => {
     const Item = require("../models/Item");
     const { name, price, quantity } = req.body;
@@ -50,7 +50,7 @@ router.post("/add", isAuthenticated, async (req, res) => {
     res.redirect("/admin");
 });
 
-// Update Item
+// ✅ Update Item (Protected)
 router.post("/update/:id", isAuthenticated, async (req, res) => {
     const Item = require("../models/Item");
     const { name, price, quantity } = req.body;
@@ -58,7 +58,7 @@ router.post("/update/:id", isAuthenticated, async (req, res) => {
     res.redirect("/admin");
 });
 
-// Delete Item
+// ✅ Delete Item (Protected)
 router.post("/delete/:id", isAuthenticated, async (req, res) => {
     const Item = require("../models/Item");
     await Item.findByIdAndDelete(req.params.id);
