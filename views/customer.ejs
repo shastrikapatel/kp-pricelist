@@ -70,56 +70,69 @@
     }
 
     /* Popup Styles */
-    .popup-overlay {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.6);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 999;
-    }
-    .popup {
-        background: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        width: 90%;
-        max-width: 400px;
-        text-align: center;
-    }
-    .popup h3 {
-        margin-bottom: 15px;
-    }
-    .popup ul {
-        text-align: left;
-        margin-bottom: 15px;
-        max-height: 200px;
-        overflow-y: auto;
-    }
-    .popup ul li {
-        font-size: 14px;
-        margin: 5px 0;
-    }
-    .popup .popup-buttons {
-        display: flex;
-        justify-content: space-between;
-    }
-    .popup button {
-        padding: 10px 15px;
-        border: none;
-        border-radius: 5px;
-        font-size: 14px;
-        cursor: pointer;
-    }
-    .popup .send-btn {
-        background: #28a745;
-        color: #fff;
-    }
-    .popup .cancel-btn {
-        background: #dc3545;
-        color: #fff;
-    }
+.popup-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+.popup {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+}
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.popup-header h3 {
+    margin: 0;
+    font-size: 18px;
+}
+.close-btn {
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+}
+.close-btn:hover {
+    color: #dc3545;
+}
+.popup ul {
+    text-align: left;
+    margin-bottom: 15px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+.popup ul li {
+    font-size: 14px;
+    margin: 5px 0;
+}
+.popup .popup-buttons {
+    display: flex;
+    justify-content: center;
+}
+.popup button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.popup .send-btn {
+    background: #28a745;
+    color: #fff;
+}
+
 
     /* Mobile Responsive Table -> Card */
     @media (max-width: 768px) {
@@ -200,7 +213,6 @@
     <button onclick="resetCart()">Reset</button>
 </div>
 
-<!-- Popup -->
 <!-- Popup -->
 <div class="popup-overlay" id="popupOverlay">
     <div class="popup">
