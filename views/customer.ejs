@@ -49,25 +49,28 @@
         text-align: center;
         margin-bottom: 15px;
     }
-    .button-group {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
     .button-group button {
-        padding: 10px 15px;
-        font-size: 16px;
-        cursor: pointer;
-        border: none;
-        border-radius: 5px;
-        background-color: #007bff;
-        color: #fff;
-        transition: background 0.3s;
-    }
-    .button-group button:hover {
-        background-color: #0056b3;
-    }
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #28a745; /* Green for pharmacy theme */
+    color: #fff;
+    transition: background 0.3s;
+}
+
+.button-group button:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+.button-group button:nth-child(2) {
+    background-color: #6c757d; /* Gray for reset */
+}
+
+.button-group button:nth-child(2):hover {
+    background-color: #5a6268;
+}
 
     /* Popup Styles */
     .popup-overlay {
