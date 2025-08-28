@@ -1,14 +1,140 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Customer View</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Price List</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+    }
+    table {
+        width: 80%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    th, td {
+        padding: 10px;
+        text-align: center;
+        border: 1px solid #ddd;
+    }
+    button {
+        padding: 5px 10px;
+        margin: 2px;
+        cursor: pointer;
+    }
+    .total {
+        font-size: 22px;
+        font-weight: bold;
+    }
+    input {
+        padding: 5px;
+        margin: 5px 0;
+    }
+</style>
 </head>
 <body>
-    <h1>Available Items</h1>
-    <ul>
+
+<h2>Price List</h2>
+
+<div>
+    <label>Name: <input type="text" id="customerName" placeholder="Enter your name"></label>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Item Name</th>
+            <th>Price (₹)</th>
+            <th>Quantity</th>
+            <th>Total (₹)</th>
+        </tr>
+    </thead>
+    <tbody id="itemList">
         <% items.forEach(item => { %>
-            <li><%= item.name %> - ₹<%= item.price %></li>
+        <tr>
+            <td><%= item.name %></td>
+            <td class="price" data-price="<%= item.price %>"><%= item.price %></td>
+            <td>
+                <button onclick="decreaseQty(this)">-</button>
+                <span class="qty">0</span>
+                <button onclick="increaseQty(this)">+</button>
+            </td>
+            <td class="total-price">0</td>
+        </tr>
         <% }) %>
-    </ul>
+    </tbody>
+</table>
+
+<div class="total">
+    Grand Total: ₹<span id="grandTotal">0</span>
+</div>
+
+<button onclick="shareWhatsApp()">Share via WhatsApp</button>
+<button onclick="resetCart()">Reset</button>
+
+<script>
+const adminNumber = '917600361112'; // Replace with admin WhatsApp number including country code
+
+function updateTotal() {
+    let total = 0;
+    document.querySelectorAll('#itemList tr').forEach(row => {
+        let price = parseInt(row.querySelector('.price').getAttribute('data-price'));
+        let qty = parseInt(row.querySelector('.qty').textContent);
+        let rowTotal = price * qty;
+        row.querySelector('.total-price').textContent = rowTotal;
+        total += rowTotal;
+    });
+    document.getElementById('grandTotal').textContent = total;
+}
+
+function increaseQty(button) {
+    let qtyElement = button.parentElement.querySelector('.qty');
+    let qty = parseInt(qtyElement.textContent);
+    qtyElement.textContent = qty + 1;
+    updateTotal();
+}
+
+function decreaseQty(button) {
+    let qtyElement = button.parentElement.querySelector('.qty');
+    let qty = parseInt(qtyElement.textContent);
+    if (qty > 0) {
+        qtyElement.textContent = qty - 1;
+        updateTotal();
+    }
+}
+
+function resetCart() {
+    document.querySelectorAll('#itemList tr .qty').forEach(qty => qty.textContent = 0);
+    updateTotal();
+}
+
+function shareWhatsApp() {
+    let name = document.getElementById('customerName').value.trim();
+    if (!name) {
+        alert('Please enter your name.');
+        return;
+    }
+
+    let message = `Order from ${name}:%0A`;
+    document.querySelectorAll('#itemList tr').forEach(row => {
+        let qty = parseInt(row.querySelector('.qty').textContent);
+        if (qty > 0) {
+            let itemName = row.cells[0].textContent;
+            let price = row.cells[1].textContent;
+            message += `${itemName} - ${qty} x ₹${price} = ₹${qty * price}%0A`;
+        }
+    });
+    message += `Grand Total: ₹${document.getElementById('grandTotal').textContent}`;
+
+    // Open WhatsApp with admin number
+    let whatsappURL = `https://wa.me/${adminNumber}?text=${message}`;
+    window.open(whatsappURL, '_blank');
+}
+
+updateTotal(); // initial call
+</script>
+
 </body>
 </html>
