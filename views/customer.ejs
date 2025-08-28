@@ -9,10 +9,12 @@
         font-family: Arial, sans-serif;
         margin: 10px;
         padding: 0;
+        background: #f9f9f9;
     }
     h2 {
         text-align: center;
         margin-bottom: 20px;
+        color: #28a745;
     }
     .input-section {
         display: flex;
@@ -36,6 +38,9 @@
         width: 100%;
         border-collapse: collapse;
         margin-bottom: 20px;
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
     }
     th, td {
         padding: 10px;
@@ -78,7 +83,7 @@
         background-color: #5a6268;
     }
 
-    /* Popup Styles */
+    /* Popup Overlay */
     .popup-overlay {
         position: fixed;
         top: 0; left: 0;
@@ -99,6 +104,7 @@
     }
     .popup h3 {
         margin-bottom: 15px;
+        color: #28a745;
     }
     .popup ul {
         text-align: left;
@@ -107,12 +113,13 @@
         overflow-y: auto;
     }
     .popup ul li {
-        font-size: 18px;
+        font-size: 16px;
         margin: 5px 0;
     }
     .popup .popup-buttons {
         display: flex;
         justify-content: space-between;
+        gap: 10px;
     }
     .popup button {
         padding: 10px 15px;
@@ -120,6 +127,7 @@
         border-radius: 5px;
         font-size: 14px;
         cursor: pointer;
+        width: 48%;
     }
     .popup .send-btn {
         background: #28a745;
@@ -131,6 +139,16 @@
     }
 
     /* Message Popup */
+    #messageOverlay {
+        display: none;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.6);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
     .message-box {
         background: #fff;
         padding: 20px;
@@ -163,7 +181,7 @@
         }
         tr {
             margin-bottom: 15px;
-            background: #f9f9f9;
+            background: #fff;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 8px;
@@ -192,7 +210,7 @@
 <h2>Price List</h2>
 
 <div class="input-section">
-    <input type="text" id="customerName" placeholder="Enter your number">
+    <input type="text" id="customerPhone" placeholder="Enter your phone number">
 </div>
 
 <div class="table-container">
@@ -206,10 +224,9 @@
             </tr>
         </thead>
         <tbody id="itemList">
-            <% items.forEach(item => { %>
             <tr>
-                <td data-label="Item Name"><%= item.name %></td>
-                <td class="price" data-price="<%= item.price %>" data-label="Price (₹)"><%= item.price %></td>
+                <td data-label="Item Name">Paracetamol</td>
+                <td class="price" data-price="50" data-label="Price (₹)">50</td>
                 <td data-label="Quantity">
                     <button onclick="decreaseQty(this)">-</button>
                     <span class="qty">0</span>
@@ -217,7 +234,16 @@
                 </td>
                 <td class="total-price" data-label="Total (₹)">0</td>
             </tr>
-            <% }) %>
+            <tr>
+                <td data-label="Item Name">Vitamin C</td>
+                <td class="price" data-price="30" data-label="Price (₹)">30</td>
+                <td data-label="Quantity">
+                    <button onclick="decreaseQty(this)">-</button>
+                    <span class="qty">0</span>
+                    <button onclick="increaseQty(this)">+</button>
+                </td>
+                <td class="total-price" data-label="Total (₹)">0</td>
+            </tr>
         </tbody>
     </table>
 </div>
@@ -245,7 +271,7 @@
 </div>
 
 <!-- Popup for Messages -->
-<div class="popup-overlay" id="messageOverlay" style="display:none;">
+<div id="messageOverlay">
     <div class="message-box">
         <p id="messageText"></p>
         <button onclick="closeMessage()">OK</button>
@@ -298,9 +324,9 @@ function closeMessage() {
 
 // Prepare popup with selected items
 function prepareWhatsApp() {
-    let name = document.getElementById('customerName').value.trim();
-    if (!name) { 
-        showMessage('Please enter your number.'); 
+    let phone = document.getElementById('customerPhone').value.trim();
+    if (!phone || phone.length < 10) { 
+        showMessage('Please enter a valid phone number.'); 
         return; 
     }
 
@@ -330,8 +356,8 @@ function closePopup() {
 
 // Send to WhatsApp after confirmation
 function sendWhatsApp() {
-    let name = document.getElementById('customerName').value.trim();
-    let message = `Order from ${name}:%0A`;
+    let phone = document.getElementById('customerPhone').value.trim();
+    let message = `Order from ${phone}:%0A`;
     document.querySelectorAll('#itemList tr').forEach(row => {
         let qty = parseInt(row.querySelector('.qty').textContent);
         if (qty > 0) {
