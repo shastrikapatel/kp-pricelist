@@ -21,15 +21,16 @@ router.get("/login", (req, res) => {
 
 // Handle Login
 router.post("/login", (req, res) => {
-    const { username, password } = req.body;
+    const { username, password } = req.body; // ✅ Must match form input names
 
     if (username === ADMIN_USER && password === ADMIN_PASS) {
         req.session.isAdmin = true;
         res.redirect("/admin");
     } else {
-        res.render("login", { error: "Invalid username or password" });
+        res.render("login", { error: "Invalid Email or Password" }); // ✅ Show error
     }
 });
+
 
 // Admin Panel (after login)
 router.get("/", isAuthenticated, async (req, res) => {
