@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const path = require("path");
+const session = require("express-session");
 
 const app = express();
 
@@ -21,6 +22,12 @@ async function connectDB() {
     });
     isConnected = true;
 }
+// Session setup
+app.use(session({
+    secret: "secretkey123",
+    resave: false,
+    saveUninitialized: true
+}));
 
 // Routes
 const adminRoutes = require("./routes/admin");
