@@ -31,11 +31,10 @@
     }
     .table-container {
         width: 100%;
-        overflow-x: auto; /* Allows horizontal scroll on small screens */
+        overflow-x: auto;
     }
     table {
         width: 100%;
-        min-width: 500px;
         border-collapse: collapse;
         margin-bottom: 20px;
     }
@@ -71,22 +70,37 @@
         background-color: #0056b3;
     }
 
-    /* Responsive Styles */
+    /* Mobile Responsive Table -> Card */
     @media (max-width: 768px) {
-        th, td {
-            font-size: 12px;
-            padding: 8px;
-        }
-        .total {
-            font-size: 18px;
-        }
-    }
-    @media (max-width: 480px) {
-        .button-group {
-            flex-direction: column;
-        }
-        .button-group button {
+        table, thead, tbody, th, td, tr {
+            display: block;
             width: 100%;
+        }
+        thead {
+            display: none; /* Hide table header */
+        }
+        tr {
+            margin-bottom: 15px;
+            background: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        td {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            border: none;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        td:last-child {
+            border-bottom: none;
+        }
+        td::before {
+            content: attr(data-label);
+            font-weight: bold;
+            color: #333;
         }
     }
 </style>
@@ -112,14 +126,14 @@
         <tbody id="itemList">
             <% items.forEach(item => { %>
             <tr>
-                <td><%= item.name %></td>
-                <td class="price" data-price="<%= item.price %>"><%= item.price %></td>
-                <td>
+                <td data-label="Item Name"><%= item.name %></td>
+                <td class="price" data-price="<%= item.price %>" data-label="Price (₹)"><%= item.price %></td>
+                <td data-label="Quantity">
                     <button onclick="decreaseQty(this)">-</button>
                     <span class="qty">0</span>
                     <button onclick="increaseQty(this)">+</button>
                 </td>
-                <td class="total-price">0</td>
+                <td class="total-price" data-label="Total (₹)">0</td>
             </tr>
             <% }) %>
         </tbody>
