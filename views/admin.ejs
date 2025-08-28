@@ -2,24 +2,50 @@
 <html>
 <head>
     <title>Admin Panel</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        table { width: 70%; border-collapse: collapse; margin-bottom: 20px; }
+        table, th, td { border: 1px solid #333; padding: 10px; text-align: center; }
+        input { padding: 6px; margin: 2px; }
+        button { padding: 6px 10px; margin-top: 5px; cursor: pointer; }
+        a { text-decoration: none; color: blue; }
+    </style>
 </head>
 <body>
-    <h1>Manage Items</h1>
+    <h1>Admin Panel</h1>
+    <a href="/admin/logout" style="float:right; margin-bottom:10px;">Logout</a>
+
+    <h3>Add Item</h3>
     <form action="/admin/add" method="POST">
         <input type="text" name="name" placeholder="Item Name" required>
         <input type="number" name="price" placeholder="Price" required>
+        <input type="number" name="quantity" placeholder="Quantity" required>
         <button type="submit">Add Item</button>
     </form>
 
-    <h2>Items List</h2>
-    <ul>
+    <h3>Item List</h3>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Price (₹)</th>
+            <th>Quantity</th>
+            <th>Action</th>
+        </tr>
         <% items.forEach(item => { %>
-            <li><%= item.name %> - ₹<%= item.price %>
+            <tr>
+                <form action="/admin/update/<%= item._id %>" method="POST">
+                    <td><input type="text" name="name" value="<%= item.name %>"></td>
+                    <td><input type="number" name="price" value="<%= item.price %>"></td>
+                    <td><input type="number" name="quantity" value="<%= item.quantity %>"></td>
+                    <td>
+                        <button type="submit">Update</button>
+                </form>
                 <form action="/admin/delete/<%= item._id %>" method="POST" style="display:inline;">
                     <button type="submit">Delete</button>
                 </form>
-            </li>
+                    </td>
+            </tr>
         <% }) %>
-    </ul>
+    </table>
 </body>
 </html>
