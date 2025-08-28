@@ -14,24 +14,25 @@
         }
 
         body {
-            background: #f4f6f8;
+            background: #FAFAFA;
             padding: 20px;
+            color: #212121;
         }
 
         h1,
         h3 {
             margin-bottom: 15px;
-            color: #333;
+            color: #212121;
         }
 
         /* Centered Login Form */
         #loginForm {
             max-width: 400px;
             margin: 150px auto;
-            background: #fff;
+            background: #FFFFFF;
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             text-align: center;
         }
 
@@ -39,30 +40,30 @@
             width: 100%;
             padding: 12px;
             margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            border: 1px solid #B0BEC5;
+            border-radius: 6px;
             font-size: 16px;
         }
 
         #loginForm button {
             width: 100%;
             padding: 12px;
-            background: #007bff;
+            background: #009688;
             color: #fff;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             font-size: 18px;
             cursor: pointer;
             margin-top: 10px;
-            transition: 0.3s;
+            transition: background 0.3s ease;
         }
 
         #loginForm button:hover {
-            background: #0056b3;
+            background: #00796B;
         }
 
         #error {
-            color: red;
+            color: #D32F2F;
             margin-top: 10px;
             font-size: 14px;
         }
@@ -72,16 +73,16 @@
             display: none;
             max-width: 1000px;
             margin: 30px auto;
-            background: #fff;
+            background: #FFFFFF;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
         #adminPanel a.logout {
             float: right;
             text-decoration: none;
-            color: #007bff;
+            color: #009688;
             font-weight: bold;
             margin-bottom: 10px;
         }
@@ -94,24 +95,24 @@
         input[type="number"] {
             padding: 10px;
             margin: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            border: 1px solid #B0BEC5;
+            border-radius: 6px;
             width: 200px;
         }
 
         button {
             padding: 10px 15px;
-            background: #007bff;
+            background: #FF7043;
             color: #fff;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
-            transition: 0.3s;
+            transition: background 0.3s ease;
         }
 
         button:hover {
-            background: #0056b3;
+            background: #F4511E;
         }
 
         /* Table */
@@ -124,13 +125,15 @@
         th,
         td {
             padding: 12px;
-            border: 1px solid #ddd;
+            border: 1px solid #CFD8DC;
             text-align: center;
         }
 
         th {
-            background: #007bff;
+            background: #009688;
             color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         /* Responsive Design */
@@ -181,7 +184,6 @@
         <form action="/admin/add" method="POST">
             <input type="text" name="name" placeholder="Item Name" required>
             <input type="number" name="price" placeholder="Price" required>
-            <!-- <input type="number" name="quantity" placeholder="Quantity" required> -->
             <button type="submit">Add Item</button>
         </form>
 
@@ -190,15 +192,13 @@
             <tr>
                 <th>Name</th>
                 <th>Price</th>
-                <th>Quantity</th>
-                <!-- <th>Action</th> -->
+                <th>Action</th>
             </tr>
             <% items.forEach(item=> { %>
                 <tr>
                     <form action="/admin/update/<%= item._id %>" method="POST">
                         <td><input type="text" name="name" value="<%= item.name %>"></td>
                         <td><input type="number" name="price" value="<%= item.price %>"></td>
-                        <!-- <td><input type="number" name="quantity" value="<%= item.quantity %>"></td> -->
                         <td>
                             <button type="submit">Update</button>
                     </form>
