@@ -1,4 +1,3 @@
-<!-- views/customer.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -68,6 +67,58 @@
     }
     .button-group button:hover {
         background-color: #0056b3;
+    }
+
+    /* Popup Styles */
+    .popup-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.6);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 999;
+    }
+    .popup {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+    }
+    .popup h3 {
+        margin-bottom: 15px;
+    }
+    .popup ul {
+        text-align: left;
+        margin-bottom: 15px;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+    .popup ul li {
+        font-size: 14px;
+        margin: 5px 0;
+    }
+    .popup .popup-buttons {
+        display: flex;
+        justify-content: space-between;
+    }
+    .popup button {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+    .popup .send-btn {
+        background: #28a745;
+        color: #fff;
+    }
+    .popup .cancel-btn {
+        background: #dc3545;
+        color: #fff;
     }
 
     /* Mobile Responsive Table -> Card */
@@ -145,8 +196,21 @@
 </div>
 
 <div class="button-group">
-    <button onclick="shareWhatsApp()">Share via WhatsApp</button>
+    <button onclick="prepareWhatsApp()">Share via WhatsApp</button>
     <button onclick="resetCart()">Reset</button>
+</div>
+
+<!-- Popup -->
+<div class="popup-overlay" id="popupOverlay">
+    <div class="popup">
+        <h3>Selected Items</h3>
+        <ul id="selectedItemsList"></ul>
+        <p><strong>Grand Total: ₹<span id="popupGrandTotal">0</span></strong></p>
+        <div class="popup-buttons">
+            <button class="send-btn" onclick="sendWhatsApp()">Send</button>
+            <button class="cancel-btn" onclick="closePopup()">Cancel</button>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -183,10 +247,38 @@ function resetCart() {
     updateTotal();
 }
 
-function shareWhatsApp() {
+// Prepare popup with selected items
+function prepareWhatsApp() {
     let name = document.getElementById('customerName').value.trim();
     if (!name) { alert('Please enter your number.'); return; }
 
+    let selectedItems = [];
+    document.querySelectorAll('#itemList tr').forEach(row => {
+        let qty = parseInt(row.querySelector('.qty').textContent);
+        if (qty > 0) {
+            let itemName = row.cells[0].textContent;
+            let price = row.cells[1].textContent;
+            selectedItems.push(`${itemName} - ${qty} x ₹${price}`);
+        }
+    });
+
+    if (selectedItems.length === 0) {
+        alert('Please select at least one item.');
+        return;
+    }
+
+    document.getElementById('selectedItemsList').innerHTML = selectedItems.map(item => `<li>${item}</li>`).join('');
+    document.getElementById('popupGrandTotal').textContent = document.getElementById('grandTotal').textContent;
+    document.getElementById('popupOverlay').style.display = 'flex';
+}
+
+function closePopup() {
+    document.getElementById('popupOverlay').style.display = 'none';
+}
+
+// Send to WhatsApp after confirmation
+function sendWhatsApp() {
+    let name = document.getElementById('customerName').value.trim();
     let message = `Order from ${name}:%0A`;
     document.querySelectorAll('#itemList tr').forEach(row => {
         let qty = parseInt(row.querySelector('.qty').textContent);
@@ -197,7 +289,8 @@ function shareWhatsApp() {
         }
     });
     message += `Grand Total: ₹${document.getElementById('grandTotal').textContent}`;
-
+    
+    document.getElementById('popupOverlay').style.display = 'none';
     window.open(`https://wa.me/${adminNumber}?text=${message}`, '_blank');
 }
 
