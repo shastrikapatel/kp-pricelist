@@ -2,6 +2,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const path = require("path");
+const session = require("express-session"); // <-- new
+
+require("dotenv").config();
 
 const app = express();
 
@@ -10,9 +13,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+// Session middleware
+app.use(session({
+    secret: "your-secret-key", // change this to a strong secret
+    resave: false,
+    saveUninitialized: true
+}));
+
 // MongoDB Connection Pooling
 let isConnected = false;
-
 async function connectDB() {
     if (isConnected) return;
     await mongoose.connect(process.env.MONGO_URL, {
