@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const session = require("express-session");
+const cookieSession = require("cookie-session");
 const path = require("path");
 
 const app = express();
@@ -9,19 +9,17 @@ const app = express();
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(process.cwd(), "views")); // Vercel safe
 
-// Session setup
-app.use(session({
-    secret: "your_secret_key", // change to strong secret in production
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false } // true if HTTPS
+// Cookie-based session (Vercel compatible)
+app.use(cookieSession({
+    name: "session",
+    keys: ["secret_key_here"], // Change to strong key
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
 
-// MongoDB Connection Pooling
+// MongoDB Connection
 let isConnected = false;
-
 async function connectDB() {
     if (isConnected) return;
     await mongoose.connect(process.env.MONGO_URL, {
@@ -35,7 +33,7 @@ async function connectDB() {
 const adminRoutes = require("./routes/admin");
 const customerRoutes = require("./routes/customer");
 
-// Apply DB connection for every request
+// Connect DB for every request
 app.use(async (req, res, next) => {
     await connectDB();
     next();
@@ -43,6 +41,12 @@ app.use(async (req, res, next) => {
 
 app.use("/admin", adminRoutes);
 app.use("/", customerRoutes);
+
+// Error handler
+app.use((err, req, res, next) => {
+    console.error("Error:", err);
+    res.status(500).send("Internal Server Error");
+});
 
 if (process.env.NODE_ENV !== "production") {
     const PORT = 3000;
