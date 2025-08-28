@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const path = require("path");
+const session = require("express-session");
 
 const app = express();
 
@@ -10,12 +11,19 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+// Sessions for login
+app.use(session({
+    secret: "your-secret-key", // change in production
+    resave: false,
+    saveUninitialized: true
+}));
+
 // MongoDB Connection Pooling
 let isConnected = false;
 
 async function connectDB() {
     if (isConnected) return;
-    await mongoose.connect(process.env.MONGO_URL, {
+    await mongoose.connect(process.env.MONGO_URL || "mongodb://127.0.0.1:27017/pricelistDB", {
         useNewUrlParser: true,
         useUnifiedTopology: true
     });
@@ -26,7 +34,7 @@ async function connectDB() {
 const adminRoutes = require("./routes/admin");
 const customerRoutes = require("./routes/customer");
 
-// Apply DB connection for every request (but only first time connects)
+// Apply DB connection for every request (only first time connects)
 app.use(async (req, res, next) => {
     await connectDB();
     next();
