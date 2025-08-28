@@ -81,45 +81,38 @@
         z-index: 999;
     }
     .popup {
-        background: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        width: 90%;
-        max-width: 400px;
-        text-align: center;
-    }
-    .popup h3 {
-        margin-bottom: 15px;
-    }
-    .popup ul {
-        text-align: left;
-        margin-bottom: 15px;
-        max-height: 200px;
-        overflow-y: auto;
-    }
-    .popup ul li {
-        font-size: 14px;
-        margin: 5px 0;
-    }
-    .popup .popup-buttons {
-        display: flex;
-        justify-content: space-between;
-    }
-    .popup button {
-        padding: 10px 15px;
-        border: none;
-        border-radius: 5px;
-        font-size: 14px;
-        cursor: pointer;
-    }
-    .popup .send-btn {
-        background: #28a745;
-        color: #fff;
-    }
-    .popup .cancel-btn {
-        background: #dc3545;
-        color: #fff;
-    }
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    text-align: center;
+}
+
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.popup-header h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.close-btn {
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #333;
+}
+
+.close-btn:hover {
+    color: #dc3545;
+}
+
 
     /* Mobile Responsive Table -> Card */
     @media (max-width: 768px) {
@@ -201,17 +194,21 @@
 </div>
 
 <!-- Popup -->
+<!-- Popup -->
 <div class="popup-overlay" id="popupOverlay">
     <div class="popup">
-        <h3>Selected Items</h3>
+        <div class="popup-header">
+            <h3>Selected Items</h3>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
         <ul id="selectedItemsList"></ul>
         <p><strong>Grand Total: ₹<span id="popupGrandTotal">0</span></strong></p>
         <div class="popup-buttons">
             <button class="send-btn" onclick="sendWhatsApp()">Send</button>
-            <button class="cancel-btn" onclick="closePopup()">Cancel</button>
         </div>
     </div>
 </div>
+
 
 <script>
 const adminNumber = '917600361112'; // Replace with your admin WhatsApp number including country code
