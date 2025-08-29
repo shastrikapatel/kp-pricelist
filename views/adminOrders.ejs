@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel - Orders</title>
+    <style>
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: center; }
+    </style>
+</head>
+<body>
+<h2>All Orders</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Customer Number</th>
+            <th>Items</th>
+            <th>Grand Total</th>
+            <th>Order Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% orders.forEach(order => { %>
+        <tr>
+            <td><%= order.customerNumber %></td>
+            <td>
+                <ul>
+                    <% order.items.forEach(item => { %>
+                    <li><%= item.name %> - <%= item.quantity %> x ₹<%= item.price %></li>
+                    <% }) %>
+                </ul>
+            </td>
+            <td>₹<%= order.grandTotal %></td>
+            <td><%= order.createdAt.toLocaleString() %></td>
+        </tr>
+        <% }) %>
+    </tbody>
+</table>
+</body>
+</html>

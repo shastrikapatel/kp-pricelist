@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Item = require("../models/Item");
-
+const Order = require('../models/Order');
 // Admin dashboard
 router.get("/", async (req, res) => {
     const items = await Item.find();
@@ -33,6 +33,11 @@ router.post("/update/:id", async (req, res) => {
 router.post("/delete/:id", async (req, res) => {
     await Item.findByIdAndDelete(req.params.id);
     res.redirect("/admin");
+});
+
+router.get('/orders', async (req, res) => {
+    const orders = await Order.find().sort({ createdAt: -1 });
+    res.render('adminOrders', { orders });
 });
 
 module.exports = router;
