@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel - Orders</title>
+<style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px; border: 1px solid #ddd; text-align: center; }
+    th { background-color: #f4f4f4; }
+</style>
+</head>
+<body>
+
+<h2>Confirmed Orders</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Customer Number</th>
+            <th>Grand Total</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% orders.forEach(order => { %>
+        <tr>
+            <td><%= order.customerNumber %></td>
+            <td>₹<%= order.grandTotal %></td>
+            <td><%= order.date.toLocaleString() %></td>
+        </tr>
+        <% }) %>
+    </tbody>
+</table>
+
+</body>
+</html>
