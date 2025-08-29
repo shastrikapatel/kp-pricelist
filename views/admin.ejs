@@ -161,10 +161,29 @@
                 margin-top: 240px;
             }
         }
+
+        /* Top Popup */
+        #topPopup {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #009688;
+            color: #fff;
+            padding: 12px 25px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            font-size: 16px;
+            display: none;
+            z-index: 9999;
+        }
     </style>
 </head>
 
 <body>
+
+    <!-- Top Popup -->
+    <div id="topPopup"></div>
 
     <!-- Login Form -->
     <div id="loginForm">
@@ -181,7 +200,7 @@
         <a href="#" class="logout" onclick="logout()">Logout</a>
 
         <h3>Add Item</h3>
-        <form action="/admin/add" method="POST">
+        <form id="addForm">
             <input type="text" name="name" placeholder="Item Name" required>
             <input type="number" name="price" placeholder="Price" required>
             <button type="submit">Add Item</button>
@@ -194,15 +213,15 @@
                 <th>Price</th>
                 <th>Action</th>
             </tr>
-            <% items.forEach(item=> { %>
+            <% items.forEach(item => { %>
             <tr>
-                <form action="/admin/update/<%= item._id %>" method="POST">
+                <form class="updateForm" data-id="<%= item._id %>">
                     <td><input type="text" name="name" value="<%= item.name %>"></td>
                     <td><input type="number" name="price" value="<%= item.price %>"></td>
                     <td>
                         <button type="submit">Update</button>
                 </form>
-                <form action="/admin/delete/<%= item._id %>" method="POST" style="display:inline;">
+                <form class="deleteForm" data-id="<%= item._id %>" style="display:inline;">
                     <button type="submit">Delete</button>
                 </form>
                 </td>
@@ -215,7 +234,6 @@
         const ADMIN_USER = "admin";
         const ADMIN_PASS = "12345";
 
-        // Check login state on page load using sessionStorage
         window.onload = function () {
             if (sessionStorage.getItem("isLoggedIn") === "true") {
                 showAdminPanel();
@@ -227,7 +245,7 @@
             const password = document.getElementById("password").value.trim();
 
             if (username === ADMIN_USER && password === ADMIN_PASS) {
-                sessionStorage.setItem("isLoggedIn", "true"); // session storage
+                sessionStorage.setItem("isLoggedIn", "true");
                 showAdminPanel();
             } else {
                 document.getElementById("error").innerText = "Invalid username or password!";
@@ -247,6 +265,41 @@
             document.getElementById("loginForm").style.display = "none";
             document.getElementById("adminPanel").style.display = "block";
         }
+
+        // Top Popup Function
+        function showTopPopup(message, color = "#009688") {
+            const popup = document.getElementById("topPopup");
+            popup.innerText = message;
+            popup.style.background = color;
+            popup.style.display = "block";
+
+            setTimeout(() => {
+                popup.style.display = "none";
+            }, 3000);
+        }
+
+        // Handle Add Item
+        document.getElementById("addForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            showTopPopup("Item added successfully!", "#009688");
+            this.reset();
+        });
+
+        // Handle Update Items
+        document.querySelectorAll(".updateForm").forEach(form => {
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+                showTopPopup("Item updated successfully!", "#FFA726");
+            });
+        });
+
+        // Handle Delete Items
+        document.querySelectorAll(".deleteForm").forEach(form => {
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+                showTopPopup("Item deleted successfully!", "#EF5350");
+            });
+        });
     </script>
 
 </body>
