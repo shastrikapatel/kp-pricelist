@@ -157,6 +157,21 @@
             visibility: visible;
         }
 
+        .popup.success {
+            background-color: #4CAF50;
+            /* green */
+        }
+
+        .popup.error {
+            background-color: #f44336;
+            /* red */
+        }
+
+        .popup.info {
+            background-color: #2196F3;
+            /* blue */
+        }
+
 
         /* Responsive Design */
         @media (max-width: 768px) {
@@ -204,7 +219,7 @@
         <a href="#" class="logout" onclick="logout()">Logout</a>
 
         <h3>Add Item</h3>
-        <form action="/admin/add" method="POST" onsubmit="showPopup('Item added!')">
+        <form action="/admin/add" method="POST" onsubmit="showPopup('Item added!', 'success')">
             <input type="text" name="name" placeholder="Item Name" required>
             <input type="number" name="price" placeholder="Price" required>
             <button type="submit">Add Item</button>
@@ -220,16 +235,17 @@
             </tr>
             <% items.forEach(item=> { %>
                 <tr>
-                    <form action="/admin/update/<%= item._id %>" method="POST" onsubmit="showPopup('Item updated!')">
+                    <form action="/admin/update/<%= item._id %>" method="POST" onsubmit="showPopup('Item updated!', 'success')">
                         <td><input type="text" name="name" value="<%= item.name %>"></td>
                         <td><input type="number" name="price" value="<%= item.price %>"></td>
                         <td>
                             <button type="submit">Update</button>
                     </form>
                     <form action="/admin/delete/<%= item._id %>" method="POST" style="display:inline;"
-                        onsubmit="showPopup('Item deleted!')">
+                        onsubmit="return confirmDelete()">
                         <button type="submit">Delete</button>
                     </form>
+
 
                     </td>
                 </tr>
@@ -255,22 +271,29 @@
             if (username === ADMIN_USER && password === ADMIN_PASS) {
                 sessionStorage.setItem("isLoggedIn", "true");
                 showAdminPanel();
-                showPopup("Login successful!");
+                showPopup("Login successful!", "success");
             } else {
                 document.getElementById("error").innerText = "Invalid username or password!";
-                showPopup("Login failed!");
+                showPopup("Login failed!", "error");
             }
         }
 
-        function showPopup(message) {
+        function showPopup(message, type = "info") {
             const popup = document.getElementById("popupMessage");
             popup.innerText = message;
+
+            // Reset classes
+            popup.className = "popup";
+
+            // Add type-specific class
+            popup.classList.add(type);
             popup.classList.add("show");
 
             setTimeout(() => {
                 popup.classList.remove("show");
-            }, 30000); // Hide after 3 seconds
+            }, 3000); // 3 seconds
         }
+
 
 
         function logout() {
@@ -280,7 +303,7 @@
             document.getElementById("username").value = "";
             document.getElementById("password").value = "";
             document.getElementById("error").innerText = "";
-            showPopup("Logged out!");
+            showPopup("Logged out!", "info");
         }
 
 
@@ -288,6 +311,17 @@
             document.getElementById("loginForm").style.display = "none";
             document.getElementById("adminPanel").style.display = "block";
         }
+        function confirmDelete() {
+            const confirmed = confirm("Are you sure you want to delete this item?");
+            if (confirmed) {
+                showPopup("Item deleted!", "error");
+                return true; // allow form to submit
+            } else {
+                showPopup("Delete cancelled.", "info");
+                return false; // prevent form from submitting
+            }
+        }
+
     </script>
 
 </body>
