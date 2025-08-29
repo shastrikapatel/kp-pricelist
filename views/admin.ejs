@@ -181,11 +181,12 @@
         <a href="#" class="logout" onclick="logout()">Logout</a>
 
         <h3>Add Item</h3>
-        <form action="/admin/add" method="POST">
+        <form action="/admin/add" method="POST" onsubmit="popupMessage('Add Item form submitted!')">
             <input type="text" name="name" placeholder="Item Name" required>
             <input type="number" name="price" placeholder="Price" required>
             <button type="submit">Add Item</button>
         </form>
+
 
         <h3>Item List</h3>
         <table>
@@ -195,19 +196,22 @@
                 <th>Action</th>
             </tr>
             <% items.forEach(item=> { %>
-            <tr>
-                <form action="/admin/update/<%= item._id %>" method="POST">
-                    <td><input type="text" name="name" value="<%= item.name %>"></td>
-                    <td><input type="number" name="price" value="<%= item.price %>"></td>
-                    <td>
-                        <button type="submit">Update</button>
-                </form>
-                <form action="/admin/delete/<%= item._id %>" method="POST" style="display:inline;">
-                    <button type="submit">Delete</button>
-                </form>
-                </td>
-            </tr>
-            <% }) %>
+                <tr>
+                    <form action="/admin/update/<%= item._id %>" method="POST"
+                        onsubmit="popupMessage('Update button clicked!')">
+                        <td><input type="text" name="name" value="<%= item.name %>"></td>
+                        <td><input type="number" name="price" value="<%= item.price %>"></td>
+                        <td>
+                            <button type="submit">Update</button>
+                    </form>
+                    <form action="/admin/delete/<%= item._id %>" method="POST" style="display:inline;"
+                        onsubmit="popupMessage('Delete button clicked!')">
+                        <button type="submit">Delete</button>
+                    </form>
+
+                    </td>
+                </tr>
+                <% }) %>
         </table>
     </div>
 
@@ -232,6 +236,9 @@
             } else {
                 document.getElementById("error").innerText = "Invalid username or password!";
             }
+        }
+        function popupMessage(message) {
+            alert(message);
         }
 
         function logout() {
