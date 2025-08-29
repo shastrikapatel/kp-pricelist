@@ -333,32 +333,21 @@ function closePopup() {
 
 // Send to WhatsApp after confirmation
 function sendWhatsApp() {
-    let customerNumber = document.getElementById('customerName').value.trim();
-    let grandTotal = document.getElementById('grandTotal').textContent;
-
-    if(!customerNumber) { 
-        showMessage('Please enter your number.');
-        return;
-    }
-
-    // Send order to server
-    fetch('/order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `customerNumber=${encodeURIComponent(customerNumber)}&grandTotal=${encodeURIComponent(grandTotal)}`
-    })
-    .then(res => res.json())
-    .then(data => {
-        if(data.success){
-            showMessage('Order saved successfully!');
-            // Open WhatsApp after saving
-            const adminNumber = '917600361112';
-            const message = `Order from ${customerNumber}: Grand Total ₹${grandTotal}`;
-            window.open(`https://wa.me/${adminNumber}?text=${encodeURIComponent(message)}`, '_blank');
+    let name = document.getElementById('customerName').value.trim();
+    let message = `Order from ${name}:%0A`;
+    document.querySelectorAll('#itemList tr').forEach(row => {
+        let qty = parseInt(row.querySelector('.qty').textContent);
+        if (qty > 0) {
+            let itemName = row.cells[0].textContent;
+            let price = row.querySelector('.price').textContent.replace('₹', '');
+            message += `${itemName} - ${qty} x ₹${price} = ₹${qty * price}%0A`;
         }
     });
+    message += `Grand Total: ₹${document.getElementById('grandTotal').textContent}`;
+    
+    document.getElementById('popupOverlay').style.display = 'none';
+    window.open(`https://wa.me/${adminNumber}?text=${message}`, '_blank');
 }
-
 
 updateTotal(); // initial call
 </script>

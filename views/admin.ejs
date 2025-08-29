@@ -298,27 +298,6 @@
                 </tr>
                 <% }) %>
         </table>
-        <h3>Customer Orders</h3>
-        <table>
-            <tr>
-                <th>Customer Number</th>
-                <th>Grand Total (₹)</th>
-                <th>Order Date</th>
-            </tr>
-            <% orders.forEach(order=> { %>
-                <tr>
-                    <td>
-                        <%= order.customerNumber %>
-                    </td>
-                    <td>₹<%= order.grandTotal %>
-                    </td>
-                    <td>
-                        <%= order.date.toLocaleString() %>
-                    </td>
-                </tr>
-                <% }) %>
-        </table>
-
         <div id="confirmBox" class="confirm-box">
             <div class="confirm-content">
                 <p id="confirmMessage">Are you sure?</p>
