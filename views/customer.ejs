@@ -399,23 +399,31 @@
             });
             let grandTotal = parseInt(document.getElementById('grandTotal').textContent);
 
-            // 1️⃣ Save to database
+            if (items.length === 0) {
+                showMessage('Please select at least one item.');
+                return;
+            }
+
+            // 1️⃣ Save order in database
             await fetch('/save-order', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ customerNumber: number, items, grandTotal })
             });
 
-            // 2️⃣ Send to admin WhatsApp
+            // 2️⃣ Send order to admin WhatsApp
             let message = `New Order Received!\nCustomer Number: ${number}\n\nOrder Details:\n`;
             items.forEach(item => {
                 message += `${item.name} - ${item.quantity} x ₹${item.price} = ₹${item.quantity * item.price}\n`;
             });
             message += `\nGrand Total: ₹${grandTotal}`;
+
             window.open(`https://wa.me/${adminNumber}?text=${encodeURIComponent(message)}`, '_blank');
 
             showMessage('Your order has been sent to admin!');
+            closePopup();
         }
+
 
 
         updateTotal();
