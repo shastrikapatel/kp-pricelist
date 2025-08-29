@@ -172,6 +172,51 @@
             /* blue */
         }
 
+        .confirm-box {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .confirm-content {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .confirm-actions {
+            margin-top: 20px;
+        }
+
+        .confirm-actions button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #confirmYes {
+            background-color: #f44336;
+            color: white;
+        }
+
+        #confirmNo {
+            background-color: #9E9E9E;
+            color: white;
+        }
 
         /* Responsive Design */
         @media (max-width: 768px) {
@@ -235,7 +280,8 @@
             </tr>
             <% items.forEach(item=> { %>
                 <tr>
-                    <form action="/admin/update/<%= item._id %>" method="POST" onsubmit="showPopup('Item updated!', 'success')">
+                    <form action="/admin/update/<%= item._id %>" method="POST"
+                        onsubmit="showPopup('Item updated!', 'success')">
                         <td><input type="text" name="name" value="<%= item.name %>"></td>
                         <td><input type="number" name="price" value="<%= item.price %>"></td>
                         <td>
@@ -251,6 +297,16 @@
                 </tr>
                 <% }) %>
         </table>
+        <div id="confirmBox" class="confirm-box">
+            <div class="confirm-content">
+                <p id="confirmMessage">Are you sure?</p>
+                <div class="confirm-actions">
+                    <button id="confirmYes">Yes</button>
+                    <button id="confirmNo">No</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -311,16 +367,28 @@
             document.getElementById("loginForm").style.display = "none";
             document.getElementById("adminPanel").style.display = "block";
         }
-        function confirmDelete() {
-            const confirmed = confirm("Are you sure you want to delete this item?");
-            if (confirmed) {
+        function confirmDelete(event, formElement) {
+            event.preventDefault(); // Stop form from submitting immediately
+
+            const confirmBox = document.getElementById("confirmBox");
+            confirmBox.style.display = "flex"; // Show modal
+
+            // If "Yes" is clicked
+            document.getElementById("confirmYes").onclick = function () {
+                confirmBox.style.display = "none";
                 showPopup("Item deleted!", "error");
-                return true; // allow form to submit
-            } else {
+                formElement.submit(); // Now submit the form
+            };
+
+            // If "No" is clicked
+            document.getElementById("confirmNo").onclick = function () {
+                confirmBox.style.display = "none";
                 showPopup("Delete cancelled.", "info");
-                return false; // prevent form from submitting
-            }
+            };
+
+            return false;
         }
+
 
     </script>
 
