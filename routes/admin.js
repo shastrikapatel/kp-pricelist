@@ -36,7 +36,7 @@ router.post("/delete/:id", async (req, res) => {
     res.redirect("/admin");
 });
 
-// Show all confirmed orders
+// Admin panel - show all confirmed orders
 router.get('/orders', async (req, res) => {
     try {
         const orders = await Order.find({ confirmed: true }).sort({ date: -1 });
@@ -46,21 +46,4 @@ router.get('/orders', async (req, res) => {
         res.send('Error fetching orders');
     }
 });
-
-// Confirm an order
-router.post('/confirm-order/:id', async (req, res) => {
-    try {
-        const order = await Order.findById(req.params.id);
-        if (!order) return res.status(404).send('Order not found');
-
-        order.confirmed = true;
-        await order.save();
-
-        res.redirect('/admin/orders'); // redirect to admin panel
-    } catch (err) {
-        console.log(err);
-        res.status(500).send('Error confirming order');
-    }
-});
-
 module.exports = router;
