@@ -288,9 +288,10 @@
                             <button type="submit">Update</button>
                     </form>
                     <form action="/admin/delete/<%= item._id %>" method="POST" style="display:inline;"
-                        onsubmit="return confirmDelete()">
+                        onsubmit="return confirmDelete(event, this)">
                         <button type="submit">Delete</button>
                     </form>
+
 
 
                     </td>
