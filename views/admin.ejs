@@ -136,6 +136,22 @@
             letter-spacing: 0.5px;
         }
 
+        /* Popup Style */
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #4CAF50;
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
 
@@ -196,13 +212,14 @@
             </tr>
             <% items.forEach(item=> { %>
             <tr>
-                <form action="/admin/update/<%= item._id %>" method="POST">
+                <form action="/admin/update/<%= item._id %>" method="POST" onsubmit="return confirmUpdate(event)">
                     <td><input type="text" name="name" value="<%= item.name %>"></td>
                     <td><input type="number" name="price" value="<%= item.price %>"></td>
                     <td>
                         <button type="submit">Update</button>
                 </form>
-                <form action="/admin/delete/<%= item._id %>" method="POST" style="display:inline;">
+                <form action="/admin/delete/<%= item._id %>" method="POST"
+                    onsubmit="return confirmDelete(event)" style="display:inline;">
                     <button type="submit">Delete</button>
                 </form>
                 </td>
@@ -210,6 +227,9 @@
             <% }) %>
         </table>
     </div>
+
+    <!-- Success Popup -->
+    <div id="popup">Your item is updated!</div>
 
     <script>
         const ADMIN_USER = "admin";
@@ -227,7 +247,7 @@
             const password = document.getElementById("password").value.trim();
 
             if (username === ADMIN_USER && password === ADMIN_PASS) {
-                sessionStorage.setItem("isLoggedIn", "true"); // session storage
+                sessionStorage.setItem("isLoggedIn", "true");
                 showAdminPanel();
             } else {
                 document.getElementById("error").innerText = "Invalid username or password!";
@@ -246,6 +266,28 @@
         function showAdminPanel() {
             document.getElementById("loginForm").style.display = "none";
             document.getElementById("adminPanel").style.display = "block";
+        }
+
+        function confirmUpdate(event) {
+            event.preventDefault();
+            showPopup("Your item is updated!");
+            setTimeout(() => {
+                event.target.submit();
+            }, 1000);
+            return false;
+        }
+
+        function confirmDelete(event) {
+            return confirm("Are you sure you want to delete this item?");
+        }
+
+        function showPopup(message) {
+            const popup = document.getElementById("popup");
+            popup.innerText = message;
+            popup.style.display = "block";
+            setTimeout(() => {
+                popup.style.display = "none";
+            }, 2000);
         }
     </script>
 
