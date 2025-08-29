@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const Item = require("../models/Item");
-const Order = require('../models/Order');
 
 // Admin dashboard
 router.get("/", async (req, res) => {
@@ -36,14 +35,4 @@ router.post("/delete/:id", async (req, res) => {
     res.redirect("/admin");
 });
 
-// Admin panel - show all confirmed orders
-router.get('/orders', async (req, res) => {
-    try {
-        const orders = await Order.find({ confirmed: true }).sort({ date: -1 });
-        res.render('adminOrders', { orders });
-    } catch (err) {
-        console.log(err);
-        res.send('Error fetching orders');
-    }
-});
 module.exports = router;
